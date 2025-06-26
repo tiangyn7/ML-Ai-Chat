@@ -107,8 +107,8 @@ from dotenv import load_dotenv
 from doubao.client import DoubaoClient
 
 load_dotenv()
-DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY")
-client = DoubaoClient(api_key=DOUBAO_API_KEY)
+DOUBAO_API_KEY = os.getenv("YOUR_API_KEY")
+client = DoubaoClient(api_key=YOUR_API_KEYY)
 ```
 
 ## 5. 数据文件准备
@@ -127,7 +127,7 @@ JSON
 ```
 
 ## 6. 运行项目
-bash
+
 # 激活虚拟环境（如未激活）
 cd backend/
 python app.py
@@ -158,8 +158,10 @@ bash
 npm install tailwindcss postcss autoprefixer --save-dev
 ### 8.3 数据依赖
 JSONL 文件格式（qa_data.jsonl、prompts.jsonl）
-豆包 API
+
+
 ## 9. API 接口说明
+```bash
 POST /api/chat
 
 请求体（JSON）：
@@ -182,6 +184,7 @@ JSON
     "error": "错误信息",
     "status": "error"
 }
+```
 ## 10. 注意事项
 生产环境建议配置 Nginx 或其他反向代理处理跨域和 HTTPS。
-确保 config.py 能正确从 .env 文件加载 DOUBAO_API_KEY。
+确保 config.py 能正确从 .env 文件加载 YOUR_API_KEY。
