@@ -140,22 +140,24 @@ https://dalonggou.xyz/
 
 ## 8. 技术框架与依赖
 ### 8.1 后端依赖（Python）
-Flask
-python-dotenv
-Flask-CORS
-requests
+# Flask
+# python-dotenv
+# Flask-CORS
+# requests
 安装：
 
-bash
+```bash
 pip install -r requirements.txt
-8.2 前端依赖
+```
+### 8.2 前端依赖
 HTML5/CSS3/JavaScript
 Tailwind CSS
 jQuery
 安装 Tailwind CSS（如需本地编译）：
 
-bash
+```bash
 npm install tailwindcss postcss autoprefixer --save-dev
+```
 ### 8.3 数据依赖
 JSONL 文件格式（qa_data.jsonl、prompts.jsonl）
 
