@@ -99,7 +99,7 @@ pip install -r requirements.txt
 添加如下内容：
 ```bash
 env
-DOUBAO_API_KEY="你的豆包API密钥"
+DOUBAO_API_KEY="YOUR_API_KEY"
 确保 config.py 能正确读取该变量（示例）：
 Python
 import os
@@ -129,8 +129,10 @@ JSON
 ## 6. 运行项目
 
 # 激活虚拟环境（如未激活）
+```bash
 cd backend/
 python app.py
+```
 服务默认在 http://0.0.0.0:5000 运行。
 
 前端页面：浏览器打开 frontend/index.html，或通过前端服务器访问。
