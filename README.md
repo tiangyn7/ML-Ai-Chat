@@ -142,10 +142,10 @@ https://dalonggou.xyz/
 
 ## 8. 技术框架与依赖
 ### 8.1 后端依赖（Python）
-# Flask
-# python-dotenv
-# Flask-CORS
-# requests
+#### Flask
+##### python-dotenv
+##### Flask-CORS
+##### requests
 安装：
 
 ```bash
