@@ -86,10 +86,14 @@ source venv/bin/activate
 
 # 激活虚拟环境 (Windows)
 .\venv\Scripts\activate
+
+```bash
 4.3 安装依赖
 bash
 cd backend/
 pip install -r requirements.txt
+
+```bash
 4.4 配置 API 密钥
 在项目根目录创建 .env 文件。
 添加如下内容：
