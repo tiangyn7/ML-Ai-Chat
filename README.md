@@ -190,5 +190,5 @@ JSON
 }
 ```
 ## 10. 注意事项
-生产环境建议配置 Nginx 或其他反向代理处理跨域和 HTTPS。
-确保 config.py 能正确从 .env 文件加载 YOUR_API_KEY。
+#### 生产环境建议配置 Nginx 或其他反向代理处理跨域和 HTTPS。确保 config.py 能正确从 .env 文件加载 YOUR_API_KEY。
+#### 阅读模型官方引擎文档，配置必要的SDK
