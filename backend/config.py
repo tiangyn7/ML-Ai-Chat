@@ -6,7 +6,7 @@ from volcenginesdkarkruntime import Ark
 load_dotenv(dotenv_path='../venv/Key.env') 
 
 # 获取API密钥
-DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY")
+DOUBAO_API_KEY = os.getenv("YOUR_API_KEY")
 
 # 验证密钥是否存在
 if not DOUBAO_API_KEY:
