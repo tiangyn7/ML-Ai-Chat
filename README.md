@@ -104,6 +104,8 @@ from doubao.client import DoubaoClient
 load_dotenv()
 DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY")
 client = DoubaoClient(api_key=DOUBAO_API_KEY)
+```
+
 5. 数据文件准备
 在 data/ 目录下，确保以下两个 .jsonl 文件：
 
