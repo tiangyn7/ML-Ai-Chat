@@ -89,13 +89,15 @@ source venv/bin/activate
 ```
 
 ### 4.3 安装依赖
-bash
+```bash
 cd backend/
 pip install -r requirements.txt
+```
 
 ### 4.4 配置 API 密钥
 在项目根目录创建 .env 文件。
 添加如下内容：
+```bash
 env
 DOUBAO_API_KEY="你的豆包API密钥"
 确保 config.py 能正确读取该变量（示例）：
@@ -107,14 +109,14 @@ from doubao.client import DoubaoClient
 load_dotenv()
 DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY")
 client = DoubaoClient(api_key=DOUBAO_API_KEY)
+```
 
-
-5. 数据文件准备
+## 5. 数据文件准备
 在 data/ 目录下，确保以下两个 .jsonl 文件：
 
-5.1 qa_data.jsonl (精确问答数据)
+### 5.1 qa_data.jsonl (精确问答数据)
 每行一个 JSON 对象，包含 query 和 response 字段。例如：
-
+```bash
 JSON
 {"query": "你好", "response": "111！我是AG超玩会梦泪，扣1送地狱火！"}
 5.2 prompts.jsonl (LLM 系统指令)
@@ -122,7 +124,9 @@ JSON
 
 JSON
 {"role": "system", "content": "你是AG超玩会梦泪。你会用夸张表情和游戏梗互动，用直播互动话术回应粉丝，用简洁游戏术语解决问题，用直播整活话术回应粉丝。"}
-6. 运行项目
+```
+
+## 6. 运行项目
 bash
 # 激活虚拟环境（如未激活）
 cd backend/
@@ -131,11 +135,11 @@ python app.py
 
 前端页面：浏览器打开 frontend/index.html，或通过前端服务器访问。
 
-7. 体验地址
+## 7. 体验地址
 https://dalonggou.xyz/
 
-8. 技术框架与依赖
-8.1 后端依赖（Python）
+## 8. 技术框架与依赖
+### 8.1 后端依赖（Python）
 Flask
 python-dotenv
 Flask-CORS
@@ -152,10 +156,10 @@ jQuery
 
 bash
 npm install tailwindcss postcss autoprefixer --save-dev
-8.3 数据依赖
+### 8.3 数据依赖
 JSONL 文件格式（qa_data.jsonl、prompts.jsonl）
 豆包 API
-9. API 接口说明
+## 9. API 接口说明
 POST /api/chat
 
 请求体（JSON）：
@@ -178,6 +182,6 @@ JSON
     "error": "错误信息",
     "status": "error"
 }
-10. 注意事项
+## 10. 注意事项
 生产环境建议配置 Nginx 或其他反向代理处理跨域和 HTTPS。
 确保 config.py 能正确从 .env 文件加载 DOUBAO_API_KEY。
