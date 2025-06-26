@@ -86,15 +86,14 @@ source venv/bin/activate
 
 # 激活虚拟环境 (Windows)
 .\venv\Scripts\activate
+```
 
-```bash
-4.3 安装依赖
+### 4.3 安装依赖
 bash
 cd backend/
 pip install -r requirements.txt
 
-```bash
-4.4 配置 API 密钥
+### 4.4 配置 API 密钥
 在项目根目录创建 .env 文件。
 添加如下内容：
 env
@@ -108,7 +107,7 @@ from doubao.client import DoubaoClient
 load_dotenv()
 DOUBAO_API_KEY = os.getenv("DOUBAO_API_KEY")
 client = DoubaoClient(api_key=DOUBAO_API_KEY)
-```
+
 
 5. 数据文件准备
 在 data/ 目录下，确保以下两个 .jsonl 文件：
