@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梦泪AI</title>
+    <!-- Font Awesome 图标库 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Noto Sans SC 和 Inter 字体 CDN -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind CSS CDN - IMPORTANT: This tag must be loaded before your custom CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 自定义 CSS - MUST be loaded after Tailwind CSS to override its default styles -->
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
+    <div class="app-container flex h-screen w-full">
+        <!-- 侧边栏 -->
+        <div id="sidebar"
+            class="sidebar fixed top-0 left-0 bottom-0 z-50 w-64 transform -translate-x-full transition-all duration-300 bg-gray-100 border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <nav class="size-full flex flex-col">
+                <!-- 侧边栏头部 - 包含汉堡菜单按钮和标题 -->
+                <div class="sidebar-header flex items-center p-4 h-16  dark:border-gray-700">
+                    <button id="toggle-sidebar-btn"
+                        class="p-2 text-gray-500 rounded-full transition-colors duration-200">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+
+                <div class="sidebar-body h-full overflow-y-auto p-3 flex flex-col">
+                    <ul class="space-y-1.5 flex-grow">
+                        <li>
+                            <button
+                                class="new-chat-btn w-full flex items-center gap-x-3 py-2.5 px-4 text-base font-semibold rounded-full hover:bg-gray-200 transition-colors duration-200"
+                                id="new-chat-btn-sidebar">
+                                <i class="fas fa-plus-circle shrink-0 size-5"></i>
+                                <span class="sidebar-item-text">新聊天</span>
+                            </button>
+                        </li>
+                        <!-- 聊天历史列表将由JS动态添加 -->
+                        <div id="chat-history" class="space-y-1 mb-4">
+                            <!-- 聊天历史项将由JS动态添加 -->
+                        </div>
+                    </ul>
+
+                    <!-- 侧边栏底部：主题、设置、重放聊天、清空聊天 -->
+                    <div class="sidebar-footer mt-auto pt-4  dark:border-gray-700 space-y-2">
+                        <!-- 主题切换 (现在是带有月亮图标的按钮，开关会隐藏) -->
+                        <div id="theme-toggle-wrapper"
+                            class="sidebar-item theme-toggle-wrapper flex justify-between items-center py-2 px-3 rounded-lg cursor-pointer">
+                            <span class="flex items-center gap-x-3 text-sm text-gray-700 dark:text-gray-300">
+                                <i class="fas fa-moon"></i> <span class="sidebar-item-text">主题</span>
+                            </span>
+                            <!-- 实际的开关 input 保持不变，但其父 div 会在 CSS 中被隐藏 -->
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="theme-toggle" class="sr-only peer">
+                                <div
+                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                            </label>
+                        </div>
+                        <!-- 设置链接 -->
+                        <a class="sidebar-item flex justify-between items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg dark:text-gray-300"
+                            href="#">
+                            <span class="flex items-center gap-x-3">
+                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 3h4a2 0 0 1 2 2v14a2 0 0 1-2 2h-4" />
+                                    <polyline points="10 17 15 12 10 7" />
+                                    <line x1="15" x2="3" y1="12" y2="12" />
+                                </svg>
+                                <span class="sidebar-item-text">设置</span>
+                            </span>
+                        </a>
+                        <!-- 重放聊天按钮 -->
+                        <button id="replay-chat-btn"
+                            class="sidebar-item w-full flex items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg cursor-pointer">
+                            <i class="fas fa-undo"></i>
+                            <span class="sidebar-item-text">重放聊天</span>
+                        </button>
+                        <!-- 清空聊天按钮 -->
+                        <button id="clear-chat-btn"
+                            class="sidebar-item w-full flex items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg cursor-pointer">
+                            <i class="fas fa-trash-alt"></i>
+                            <span class="sidebar-item-text">清空聊天</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- 侧边栏结束 -->
+
+        <!-- 主内容区域 -->
+        <div id="main-chat-area"
+            class="main-chat-area relative h-screen w-full flex flex-col transition-all duration-300">
+            <!-- 主头部（顶部导航栏，包含  风格的品牌、模型选择和功能图标） -->
+            <div id="main-header"
+                class="main-header fixed top-0 w-full z-20 flex items-center justify-between px-4 py-3 sm:px-6 transition-all duration-300">
+                <!-- 左侧：ML 品牌和模型选择 -->
+                <div class="flex items-center">
+                    <div class="relative cursor-pointer" id="model-selector-container">
+                        <span class="text-xl font-bold text-gray-800 dark:text-gray-100">AG超玩会</span>
+                        <!-- 模型芯片 - 添加了 relative 类，并移入了 model-dropdown -->
+                        <div
+                            class="model-chip inline-flex items-center gap-x-1 ml-3 px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 text-sm hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 relative">
+                            <span id="current-model-name">Model</span>
+                            <i class="fas fa-caret-down text-gray-500 dark:text-gray-400 text-xs"></i>
+                            <!-- 模型/人设下拉菜单 - 现在位于 model-chip 内部 -->
+                            <div class="model-dropdown absolute left-0 hidden z-50" id="model-dropdown">
+                                <!-- 选项将由 JS 动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：刷新和个人头像 -->
+                <div class="flex items-center gap-x-2">
+                    <button type="button" class="p-2 text-gray-500 rounded-full transition-colors duration-200">
+                        <i class="fas fa-sync-alt"></i> <!-- 刷新图标 -->
+                    </button>
+                    <button type="button" class="p-2 text-gray-500 rounded-full transition-colors duration-200">
+                        <i class="fas fa-user-circle text-2xl"></i> <!-- 个人头像图标 -->
+                    </button>
+                </div>
+            </div>
+
+            <!-- 聊天消息容器 -->
+            <ul id="chat-container"
+                class="chat-container h-full overflow-y-auto space-y-5 px-4 sm:px-6 lg:px-8 max-w-4xl w-full mx-auto">
+                <!-- 欢迎屏幕（初始可见，有消息时隐藏） -->
+                <div id="welcome-screen"
+                    class="welcome-screen flex flex-col justify-center items-center h-full text-center mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-800 sm:text-4xl dark:text-gray-100">欢迎使用梦泪AI</h2>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">您的智能对话伙伴</p>
+                    <div class="initial-prompts mt-10 flex flex-wrap justify-center gap-4">
+                        <div
+                            class="prompt-chip py-2 px-4 bg-gray-200 text-gray-700 rounded-full cursor-pointer hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
+                            告诉我一个关于编程的笑话</div>
+                        <div
+                            class="prompt-chip py-2 px-4 bg-gray-200 text-gray-700 rounded-full cursor-pointer hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
+                            解释一下量子计算</div>
+                        <div
+                            class="prompt-chip py-2 px-4 bg-gray-200 text-gray-700 rounded-full cursor-pointer hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
+                            帮我写一封邮件</div>
+                    </div>
+                </div>
+
+                <!-- 消息气泡模板（隐藏，通过 JS 克隆） -->
+                <!-- AI 消息模板 -->
+                <template id="ai-message-template">
+                    <li class="message-bubble-wrapper assistant py-2 sm:py-4">
+                        <div class="message-content-area flex w-full">
+                            <!-- AI 头像 -->
+                            <div
+                                class="shrink-0 size-8 flex items-center justify-center rounded-full bg-blue-600 text-white font-bold text-sm">
+                                AI
+                            </div>
+                            <!-- AI 消息内容 -->
+                            <div
+                                class="message grow max-w-[90%] md:max-w-2xl w-full space-y-3 ml-4 p-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+                                <div class="message-content text-sm prose dark:prose-invert max-w-none">
+                                    <!-- AI 消息文本将注入到这里 -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- AI 思考过程容器（默认隐藏） -->
+                        <div class="reasoning-container ml-12 mt-2 mb-2 hidden">
+                            <div
+                                class="reasoning-header flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer dark:bg-gray-600 dark:text-gray-200">
+                                <span class="text-sm font-medium">显示思路</span>
+                                <div class="loading-dots hidden"><span></span><span></span><span></span></div>
+                                <i class="fas fa-caret-right text-gray-500 dark:text-gray-400"></i>
+                            </div>
+                            <div
+                                class="reasoning-content p-4 bg-white border border-t-0 border-gray-200 rounded-b-lg dark:bg-gray-800 dark:border-gray-700 prose dark:prose-invert max-w-none">
+                                <!-- 思考过程内容将注入到这里 -->
+                            </div>
+                        </div>
+                    </li>
+                </template>
+
+                <!-- 用户消息模板 -->
+                <!-- IMPORTANT: 确保这里是 <template> 标签，而不是 <li> 标签带有 hidden 类 -->
+                <template id="user-message-template">
+                    <li class="message-bubble-wrapper user py-2 sm:py-4">
+                        <div class="message-content-area flex w-full justify-end">
+                            <!-- 用户消息内容 -->
+                            <div
+                                class="message grow max-w-[90%] md:max-w-2xl w-full space-y-3 mr-4 p-3 rounded-xl bg-blue-500 dark:bg-blue-600 text-white">
+                                <div class="message-content text-sm prose dark:prose-invert max-w-none">
+                                    <!-- 用户消息文本将注入到这里 -->
+                                </div>
+                            </div>
+                            <!-- 用户头像 -->
+                            <span
+                                class="shrink-0 inline-flex items-center justify-center size-8 rounded-full bg-gray-400 text-white font-bold text-sm">
+                                你
+                            </span>
+                        </div>
+                        <!-- 用户思考过程容器（默认隐藏） -->
+                        <div class="reasoning-container mr-12 mt-2 mb-2 hidden text-right">
+                            <div
+                                class="reasoning-header flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer dark:bg-gray-600 dark:text-gray-200">
+                                <span class="text-sm font-medium">显示思路</span>
+                                <div class="loading-dots hidden"><span></span><span></span><span></span></div>
+                                <i class="fas fa-caret-right text-gray-500 dark:text-gray-400"></i>
+                            </div>
+                            <div
+                                class="reasoning-content p-4 bg-white border border-t-0 border-gray-200 rounded-b-lg dark:bg-gray-800 dark:border-gray-700 prose dark:prose-invert max-w-none">
+                                <!-- 思考过程内容将注入到这里 -->
+                            </div>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+
+            <!-- 文本输入/上传区域 -->
+            <div id="input-area-wrapper"
+                class="input-area-wrapper fixed bottom-0 z-10 w-full flex justify-center p-4 bg-gray-50 dark:bg-gray-900 transition-all duration-300">
+                <div class="input-container-inner max-w-3xl w-full flex flex-col items-center">
+                    <!-- 输入框和按钮的容器 -->
+                    <div
+                        class="input-box relative flex flex-col w-full border border-gray-300 rounded-3xl shadow-md bg-white dark:bg-gray-800 dark:border-gray-700">
+                        <!-- 上方：输入框 -->
+                        <div class="flex items-center w-full px-2 pt-2">
+                            <textarea id="message-input"
+                                class="flex-grow p-1 block w-full bg-transparent border-none focus:outline-none focus:ring-0 resize-none overflow-hidden text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                                placeholder="How can ML help you" rows="1"></textarea>
+                        </div>
+
+                        <!-- 下方：功能按钮行 -->
+                        <div class="flex items-center w-full pb-2 px-2">
+                            <!-- 文件上传按钮（位于输入框内，左侧） -->
+                            <label for="file-upload" id="upload-button"
+                                class="input-box-icon-btn flex-shrink-0 flex justify-center items-center h-8 w-8 text-gray-500 rounded-full cursor-pointer transition-colors duration-200 ml-1 mr-1">
+                                <i class="fas fa-plus text-base"></i>
+                            </label>
+                            <input type="file" id="file-upload" accept="image/*" class="hidden">
+
+                            <!-- 深度思考按钮 (现在是可点击的菜单) -->
+                            <button id="deep-thought-btn"
+                                class="input-box-chip-btn flex-shrink-0 py-1 px-2.5 flex items-center gap-x-1 rounded-full text-gray-700 relative mr-1 text-sm">
+                                <i class="fas fa-lightbulb text-yellow-500"></i>
+                                <span id="deep-thought-text" class="">深度思考</span>
+                                <i class="fas fa-caret-down ml-0.5 text-xs"></i>
+                                <!-- 深度思考模式选择菜单 -->
+                                <div id="deep-thought-dropdown"
+                                    class="deep-thought-dropdown absolute bottom-full left-0 mb-2 p-2 bg-white border border-gray-200 rounded-lg shadow-lg hidden dark:bg-gray-700 dark:border-gray-600 z-50">
+                                    <div class="dropdown-item py-1 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm"
+                                        data-mode="on">开启</div>
+                                    <div class="dropdown-item py-1 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm"
+                                        data-mode="off">关闭</div>
+                                    <div class="dropdown-item py-1 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm"
+                                        data-mode="auto">自动</div>
+                                </div>
+                            </button>
+
+                            <!-- Canvas 按钮 -->
+                            <button id="canvas-btn"
+                                class="input-box-chip-btn flex-shrink-0 py-1 px-2.5 flex items-center gap-x-1 rounded-full text-gray-700 mr-auto text-sm">
+                                <i class="fas fa-vector-square text-blue-500"></i>
+                                <span class="">Canvas</span>
+                            </button>
+
+                            <!-- 发送按钮（位于输入框内，右下角） -->
+                            <button type="button" id="send-btn"
+                                class="input-box-icon-btn flex-shrink-0 flex justify-center items-center h-8 w-8 rounded-full text-gray-500 disabled:opacity-50 disabled:pointer-events-none ml-auto">
+                                <i class="fas fa-paper-plane text-base rotate-45 -translate-y-px -translate-x-px"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 免责声明 -->
+                    <div class="disclaimer mt-3 text-xs text-gray-500 dark:text-gray-400 text-center w-full">
+                        扣1送地狱火！！！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS 插件 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 自定义 JS -->
+    <script src="/frontend/js/script.js" type="module"></script>
+</body>
+
+</html>

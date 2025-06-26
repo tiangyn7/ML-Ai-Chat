@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "env": {
+                "DOUBAO_API_KEY": "f8f13fa3-8745-4ddd-8dbc-6f54cb7a7950"
+            }
+        }
+    ]
+}
